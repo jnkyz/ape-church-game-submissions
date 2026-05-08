@@ -1,7 +1,7 @@
 import { Game } from "@/lib/games";
 
 export const myGame: Game = {
-    title: "Skate or Bail",
+    title: "Skate or Crash",
     description: "A crash game where JNKY keeps skating until a sudden wipeout.",
     gameAddress: "0x1234567890123456789012345678901234567890",
     gameBackground: "/submissions/jnkyz-skate-or-crash/background.webp",
