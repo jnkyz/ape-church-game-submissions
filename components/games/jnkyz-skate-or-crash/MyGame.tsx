@@ -473,7 +473,7 @@ const MyGameComponent: React.FC<MyGameComponentProps> = ({ game }) => {
                         <ul className="mt-4 space-y-2 text-sm text-white/90">
                             <li>1. Set your bet amount and optional auto-cashout target.</li>
                             <li>2. Press <span className="font-semibold">Place Your Bet</span> to start the run.</li>
-                            <li>3. Multiplier rises while JNKYZ skates - cash out before crash.</li>
+                            <li>3. Multiplier rises while Wade skates - cash out before crash.</li>
                             <li>4. If crash happens first, you lose that round's bet.</li>
                             <li>5. Use Play Again, Rewatch, or Change Bet after each round.</li>
                         </ul>
