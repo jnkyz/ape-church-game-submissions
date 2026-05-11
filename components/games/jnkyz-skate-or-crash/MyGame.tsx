@@ -468,7 +468,7 @@ const MyGameComponent: React.FC<MyGameComponentProps> = ({ game }) => {
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm">
                     <div className="w-full max-w-xl rounded-xl border border-[#7FFFD455] bg-[#07131B]/95 p-6 text-white shadow-[0_0_28px_rgba(0,229,255,0.2)]">
                         <h2 className="text-xl font-black tracking-[0.08em] uppercase text-[#7FFFD4]">
-                            How To Play Skate Crash
+                            How To Play Skate or Crash
                         </h2>
                         <ul className="mt-4 space-y-2 text-sm text-white/90">
                             <li>1. Set your bet amount and optional auto-cashout target.</li>
