@@ -407,65 +407,69 @@ const MyGameComponent: React.FC<MyGameComponentProps> = ({ game }) => {
 
     return (
         <div className="relative">
-            {!splashDismissed ? (
-                <div className="fixed inset-0 z-[100] flex flex-col bg-[#050a0e]">
-                    <video
-                        className="absolute inset-0 h-full w-full object-contain"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="auto"
-                    >
-                        <source
-                            src="/submissions/jnkyz-skate-or-crash/splash-screen.webm"
-                            type="video/webm"
-                        />
-                    </video>
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050a0e] to-transparent" />
-                    <div className="relative z-[1] mt-auto flex justify-center px-6 pb-10 pt-6">
-                        <button
-                            type="button"
-                            onClick={() => setSplashDismissed(true)}
-                            className="pointer-events-auto min-w-[200px] rounded-md border border-[#7FFFD4]/40 bg-[#7FFFD4] px-8 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#042d28] shadow-[0_0_24px_rgba(127,255,212,0.35)] transition hover:opacity-95 active:scale-[0.98]"
-                        >
-                            Start
-                        </button>
-                    </div>
-                </div>
-            ) : null}
-
             <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 lg:gap-10">
-                <GameWindow
-                    game={game}
-                    currentGameId={currentGameId}
-                    isLoading={isLoading}
-                    isGameFinished={currentView === 2}
-                    onPlayAgain={handlePlayAgain}
-                    playAgainText={playAgainText}
-                    onRewatch={handleRewatch}
-                    onReset={handleReset}
-                    betAmount={betAmount}
-                    payout={payout}
-                    inReplayMode={inReplayMode}
-                    isUserOriginalPlayer={true}
-                    showPNL={showPNL}
-                    isGamePaused={false}
-                    resultModalDelayMs={800}
-                    onSfxMutedChange={setSfxMuted}
-                    musicVolumeMultiplier={musicVolumeMultiplier}
-                >
-                    <MyGameWindow
+                <div className="relative w-full min-w-0 lg:basis-2/3">
+                    <GameWindow
                         game={game}
-                        multiplier={multiplier}
-                        crashAt={crashAt}
-                        isGameOngoing={isGameOngoing}
-                        isCrashed={isCrashed}
-                        elapsedMs={elapsedMs}
-                        didCashout={didCashout}
-                        sfxMuted={sfxMuted}
-                    />
-                </GameWindow>
+                        currentGameId={currentGameId}
+                        isLoading={isLoading}
+                        isGameFinished={currentView === 2}
+                        onPlayAgain={handlePlayAgain}
+                        playAgainText={playAgainText}
+                        onRewatch={handleRewatch}
+                        onReset={handleReset}
+                        betAmount={betAmount}
+                        payout={payout}
+                        inReplayMode={inReplayMode}
+                        isUserOriginalPlayer={true}
+                        showPNL={showPNL}
+                        isGamePaused={false}
+                        resultModalDelayMs={800}
+                        onSfxMutedChange={setSfxMuted}
+                        musicVolumeMultiplier={musicVolumeMultiplier}
+                    >
+                        <MyGameWindow
+                            game={game}
+                            multiplier={multiplier}
+                            crashAt={crashAt}
+                            isGameOngoing={isGameOngoing}
+                            isCrashed={isCrashed}
+                            elapsedMs={elapsedMs}
+                            didCashout={didCashout}
+                            sfxMuted={sfxMuted}
+                        />
+                    </GameWindow>
+
+                    {!splashDismissed ? (
+                        <div className="absolute inset-0 z-[35] flex flex-col overflow-hidden rounded-[12px] bg-[#050a0e]">
+                            <div className="min-h-0 flex-1">
+                                <video
+                                    className="h-full w-full object-contain"
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    preload="auto"
+                                >
+                                    <source
+                                        src="/submissions/jnkyz-skate-or-crash/splash-screen.webm"
+                                        type="video/webm"
+                                    />
+                                </video>
+                            </div>
+                            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#050a0e] to-transparent sm:h-36" />
+                            <div className="absolute inset-x-0 bottom-0 flex justify-center px-4 pb-5 pt-4 sm:pb-7">
+                                <button
+                                    type="button"
+                                    onClick={() => setSplashDismissed(true)}
+                                    className="min-w-[180px] rounded-md border border-[#7FFFD4]/40 bg-[#7FFFD4] px-6 py-2.5 text-xs font-black uppercase tracking-[0.12em] text-[#042d28] shadow-[0_0_24px_rgba(127,255,212,0.35)] transition hover:opacity-95 active:scale-[0.98] sm:px-8 sm:py-3 sm:text-sm"
+                                >
+                                    Start
+                                </button>
+                            </div>
+                        </div>
+                    ) : null}
+                </div>
 
                 <MyGameSetupCard
                     game={game}
