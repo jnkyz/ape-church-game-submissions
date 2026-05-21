@@ -1,0 +1,35 @@
+{
+  "team": "broky",
+  "gameName": "limbo",
+  "displayTitle": "Limbo",
+  "description": "The player must select a target multiplier, place a bet, and wait for the random number to hit a chosen goal. The lower the multiplier, the safer the bet; the higher it is, the bigger the risk and possible payout.",
+  "authors": [
+    {
+      "name": "broky",
+      "telegram": "HCAP1"
+    }
+  ],
+  "revenueShare": [
+    {
+      "name": "broky",
+      "telegram": "HCAP1",
+      "address": "0x48eA705f0d0333294199eb93fedC830B2F31b45D",
+      "share": 100
+    }
+  ],
+  "status": "pending",
+  "category": "strategy",
+  "tags": [
+    "multipliers",
+    "strategy",
+    "game"
+  ],
+  "thumbnail": "/limbo/card.png",
+  "banner": "/limbo/banner.png",
+  "mainComponent": "limbo.tsx",
+  "windowComponent": "limboWindow.tsx",
+  "setupComponent": "limboSetupCard.tsx",
+  "configFile": "limboConfig.ts",
+  "version": "2.0.0",
+  "submittedAt": "2026-05-02"
+}

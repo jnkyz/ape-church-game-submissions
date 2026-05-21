@@ -1,0 +1,1183 @@
+@font-face {
+    font-family: "Nohemi";
+    src: url("/submissions/hilo/nohemi/Nohemi/Web-TT/Nohemi-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Afacad";
+    src: url("/submissions/hilo/afacad/Afacad-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(3) {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 999px;
+    overflow: visible;
+    height: 34px;
+    width: calc(100% + 1.25rem);
+    margin-left: -0.625rem;
+    margin-right: -0.625rem;
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(3) > div:nth-child(1) > div {
+    height: 16px;
+    border-radius: 999px;
+    background: #2b3b46;
+    border: 1px solid rgba(141, 168, 186, 0.26);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(3) > div:nth-child(1) {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(3) > div:nth-child(2) {
+    left: 0.75rem !important;
+    max-width: calc(100% - 1.5rem);
+    min-width: 10px;
+    transition: width 0.08s linear !important;
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(3) > div:nth-child(2) > div {
+    height: 16px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #38a400 0%, #b4f700 100%) !important;
+    box-shadow: 0 0 9px rgba(140, 255, 0, 0.18);
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(3) > div:nth-child(3) > div {
+    display: none !important;
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(3) > div:nth-child(3) {
+    transition: left 0.08s linear !important;
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(1) > div > p {
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+    font-weight: 600;
+    color: #dbe9f4 !important;
+}
+
+.hilo-bet-slider-shell > div > div:nth-child(4) button {
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+    font-weight: 600;
+}
+
+@keyframes hilo-wallet-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    20% {
+        transform: translateX(-2px);
+    }
+    40% {
+        transform: translateX(2px);
+    }
+    60% {
+        transform: translateX(-1.5px);
+    }
+    80% {
+        transform: translateX(1.5px);
+    }
+}
+
+.hilo-wallet-shake {
+    animation: hilo-wallet-shake 0.42s ease;
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+    will-change: transform, color;
+}
+
+.hilo-wallet-balance-row > div > div:nth-child(1) > div:nth-child(2) {
+    margin-top: 2px;
+}
+
+.hilo-wallet-alert > div > div:nth-child(1) > div:nth-child(2) > p {
+    color: #ef4444 !important;
+    animation: hilo-wallet-shake 0.42s ease;
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+    will-change: transform, color;
+}
+
+.hilo-root {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    color: #d5e0e9;
+    gap: 10px;
+    background: #1a2328;
+
+    font-family: "Afacad", ui-sans-serif, system-ui, sans-serif;
+}
+
+.hilo-vignette {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    pointer-events: none;
+}
+
+.hilo-header,
+.hilo-table,
+.hilo-action-row,
+.hilo-outs-row,
+.hilo-message {
+    position: relative;
+    z-index: 2;
+}
+
+.hilo-header {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.hilo-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px;
+    border: 1px solid rgba(102, 151, 190, 0.18);
+    border-radius: 10px;
+    background: rgba(26, 58, 84, 0.62);
+}
+
+.hilo-stat span {
+    font-size: 10px;
+    color: rgba(173, 207, 234, 0.86);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.hilo-stat strong {
+    font-size: 15px;
+    letter-spacing: 0.02em;
+}
+
+.hilo-table-shell {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(26px, 7vw, 130px);
+    min-height: 260px;
+    padding: 22px 14px;
+}
+
+.hilo-guide-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    min-height: 140px;
+    text-align: center;
+    padding: 10px 8px;
+    border: 1.5px solid rgba(150, 191, 220, 0.44);
+    border-radius: 12px;
+}
+
+.hilo-guide-value {
+    font-size: 42px;
+    font-weight: 800;
+    color: rgba(173, 207, 234, 0.38);
+    line-height: 1;
+    margin: 0;
+}
+
+.hilo-guide-copy {
+    margin: 8px 0 0;
+    font-size: 11px;
+    color: rgba(173, 207, 234, 0.72);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.25;
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+}
+
+.hilo-card-stack-area {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-width: 168px;
+}
+
+.hilo-card-shadow-1,
+.hilo-card-shadow-2 {
+    position: absolute;
+    width: 154px;
+    height: 220px;
+    border-radius: 14px;
+    background: rgba(241, 245, 249, 0.78);
+    border: 2px solid rgba(226, 232, 240, 0.56);
+    box-shadow: 0 6px 14px rgba(2, 8, 24, 0.2);
+}
+
+.hilo-card-shadow-1 {
+    transform: translateY(4px);
+}
+
+.hilo-card-shadow-2 {
+    transform: translateY(8px);
+}
+
+.hilo-card {
+    z-index: 2;
+    width: 154px;
+    height: 220px;
+    border-radius: 14px;
+    border: 2px solid rgba(241, 245, 249, 0.85);
+    background: linear-gradient(165deg, #ffffff, #e2e8f0);
+    box-shadow: 0 14px 36px rgba(2, 6, 23, 0.45);
+    position: relative;
+    overflow: hidden;
+}
+
+.hilo-card-result-win::after,
+.hilo-card-result-loss::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+.hilo-card-result-win,
+.hilo-card-result-loss {
+    overflow: visible;
+}
+
+.hilo-card-result-loss-persist {
+    overflow: visible;
+}
+
+.hilo-card-result-win::after {
+    animation: hilo-card-result-win 420ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.hilo-card-result-loss::after {
+    animation: hilo-card-result-loss 420ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.hilo-card-result-loss-persist::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 16px;
+    pointer-events: none;
+    box-shadow:
+        0 0 0 5px rgba(239, 68, 68, 0.92),
+        0 0 16px rgba(239, 68, 68, 0.55);
+}
+
+.hilo-card-live {
+    transform-origin: center;
+    animation: hilo-card-reveal 500ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+@keyframes hilo-card-result-win {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+    35% {
+        box-shadow:
+            0 0 0 5px rgba(34, 197, 94, 1),
+            0 0 16px rgba(34, 197, 94, 0.55);
+    }
+    100% {
+        box-shadow: 0 0 0 5px rgba(34, 197, 94, 0);
+    }
+}
+
+@keyframes hilo-card-result-loss {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+    35% {
+        box-shadow:
+            0 0 0 5px rgba(239, 68, 68, 1),
+            0 0 16px rgba(239, 68, 68, 0.55);
+    }
+    100% {
+        box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
+    }
+}
+
+.hilo-card-shake {
+    animation: hilo-card-shake 280ms ease-in-out;
+}
+
+@keyframes hilo-card-shake {
+    0% {
+        transform: translateX(0);
+    }
+    20% {
+        transform: translateX(-4px);
+    }
+    40% {
+        transform: translateX(4px);
+    }
+    60% {
+        transform: translateX(-3px);
+    }
+    80% {
+        transform: translateX(3px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes hilo-card-reveal {
+    0% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96) rotateX(10deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateX(0deg);
+    }
+}
+
+.hilo-card-hidden {
+    border-color: rgba(140, 255, 0, 0.42);
+    background: linear-gradient(160deg, #131b20 0%, #1a252c 55%, #24323a 100%);
+}
+
+.hilo-card-pattern {
+    position: absolute;
+    inset: 7px;
+    border-radius: 9px;
+    border: 1px solid rgba(140, 255, 0, 0.24);
+    background: linear-gradient(160deg, #1a252c 0%, #223039 100%);
+    box-shadow: inset 0 0 0 1px rgba(140, 255, 0, 0.08);
+}
+
+.hilo-card-pattern::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(140, 255, 0, 0.14);
+}
+
+.hilo-card-pattern::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 56px;
+    height: 56px;
+    transform: translate(-50%, -50%);
+    background: url("/submissions/hilo/Logomark_White.png") center / contain no-repeat;
+    opacity: 0.92;
+}
+
+.hilo-card-corner {
+    position: absolute;
+    left: 12px;
+    top: 8px;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+}
+
+.hilo-card-corner-bottom {
+    left: auto;
+    right: 10px;
+    top: auto;
+    bottom: 8px;
+    transform: rotate(180deg);
+}
+
+.hilo-card-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 72px;
+}
+
+.hilo-profit-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: -8px;
+    margin-bottom: -2px;
+}
+
+.hilo-profit-box {
+    border-radius: 10px;
+    border: 1px solid rgba(120, 146, 164, 0.24);
+    background: #1a2328;
+    padding: 8px 10px;
+}
+
+.hilo-profit-box p {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(220, 239, 255, 0.94);
+}
+
+.hilo-profit-box p.hilo-afacad-label {
+    font-family: "Afacad", ui-sans-serif, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+.hilo-profit-box strong {
+    margin-top: 4px;
+    display: inline-block;
+    font-size: 20px;
+    line-height: 1.1;
+    color: #f1f7ff;
+}
+
+.hilo-profit-box-right {
+    text-align: right;
+}
+
+.hilo-nohemi-number {
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+}
+
+.hilo-action-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 6px;
+    margin-top: -4px;
+}
+
+.hilo-center-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hilo-center-actions .hilo-action-btn,
+.hilo-center-actions .hilo-cashout-btn {
+    width: 168px;
+}
+
+.hilo-action-btn,
+.hilo-cashout-btn {
+    height: 40px;
+    border-radius: 8px;
+    border: none !important;
+    background: rgb(57, 85, 101) !important;
+    color: rgb(255, 255, 255) !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 18px !important;
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 24px !important;
+    cursor: pointer !important;
+    user-select: none;
+    box-shadow:
+        rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+        rgba(0, 0, 0, 0.1) 0px 2px 4px -2px;
+    transition: color 0.15s, background-color 0.15s, box-shadow 0.15s;
+}
+
+.hilo-action-btn span,
+.hilo-action-btn small {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.hilo-action-content {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1;
+}
+
+.hilo-action-content > span,
+.hilo-action-content > small {
+    display: inline;
+    line-height: 1;
+}
+
+.hilo-action-btn:disabled,
+.hilo-cashout-btn:disabled {
+    cursor: not-allowed !important;
+}
+
+.hilo-action-btn small {
+    font-size: 14px;
+    font-weight: 600;
+    color: #b5c7d4;
+    margin: 0;
+}
+
+.hilo-cashout-btn {
+    min-width: 168px;
+    background: #8cff00 !important;
+    color: #0f1a22 !important;
+    font-weight: 700;
+    font-family: "Nohemi", ui-sans-serif, sans-serif !important;
+}
+
+.hilo-deal-label {
+    font-family: "Nohemi", ui-sans-serif, sans-serif !important;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.hilo-history-row {
+    display: flex;
+    align-items: flex-end;
+    min-height: 154px;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background: #1D262D;
+}
+
+.hilo-history-scroll {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    background: #1D262D;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    user-select: none;
+}
+
+.hilo-history-scroll:active {
+    cursor: grabbing;
+}
+
+.hilo-history-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.hilo-history-scroll::-webkit-scrollbar-thumb {
+    background: rgba(130, 156, 174, 0.35);
+    border-radius: 4px;
+}
+
+.hilo-history-item {
+    min-width: 84px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+}
+
+.hilo-history-card {
+    position: relative;
+    z-index: 4;
+    width: 84px;
+    height: 116px;
+    perspective: 900px;
+}
+
+.hilo-history-card-enter {
+    animation: hilo-history-card-slide-in 420ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.hilo-history-card-flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: hilo-history-card-flip-in 420ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.hilo-history-card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.hilo-history-card-face-front {
+    transform: rotateY(180deg);
+}
+
+.hilo-history-card-face-back {
+    transform: rotateY(0deg);
+}
+
+@keyframes hilo-history-card-slide-in {
+    0% {
+        opacity: 0;
+        transform: translateX(52px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes hilo-history-card-flip-in {
+    0% {
+        transform: rotateY(0deg);
+    }
+    80% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(180deg);
+    }
+}
+
+.hilo-card-compact {
+    width: 84px;
+    height: 116px;
+    border-radius: 8px;
+}
+
+.hilo-card-compact .hilo-card-center {
+    font-size: 40px;
+}
+
+.hilo-card-compact .hilo-card-corner {
+    left: 8px;
+    top: 6px;
+    font-size: 20px;
+}
+
+.hilo-card-compact .hilo-card-corner-bottom {
+    right: 8px;
+    bottom: 6px;
+}
+
+.hilo-history-label {
+    position: relative;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 22px;
+    border-radius: 6px;
+    padding: 0 6px;
+    background: #8cff00;
+    border: 1px solid #8cff00;
+    color: #0f1a03;
+    font-size: 12px;
+    font-weight: 700;
+    text-shadow: none;
+    opacity: 1;
+    white-space: nowrap;
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+}
+
+.hilo-history-label-loss {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #fff;
+}
+
+.hilo-history-label-skip {
+    background: #8cff00;
+    border-color: #8cff00;
+    color: #0f1a03;
+}
+
+.hilo-history-card-skip {
+    filter: brightness(0.72) saturate(0.86);
+}
+
+.hilo-history-connector {
+    position: absolute;
+    top: 42px;
+    left: -16px;
+    width: 26px;
+    height: 26px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(34, 197, 94, 0.62);
+    background: linear-gradient(to bottom right, rgba(34, 197, 94, 0.96), rgba(5, 150, 105, 0.96));
+    backdrop-filter: blur(6px);
+    box-shadow:
+        0 6px 16px rgba(34, 197, 94, 0.26),
+        0 2px 6px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+    transform: rotate(-2deg);
+    animation: hilo-history-badge-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    z-index: 10;
+}
+
+.hilo-history-connector-icon {
+    width: 14px;
+    height: 14px;
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+.hilo-history-connector-icon-check {
+    width: 12px;
+    height: 12px;
+}
+
+.hilo-history-connector-icon-loss {
+    width: 10px;
+    height: 10px;
+}
+
+.hilo-history-connector-win {
+    border-color: rgba(34, 197, 94, 0.62);
+    background: linear-gradient(to bottom right, rgba(34, 197, 94, 0.96), rgba(5, 150, 105, 0.96));
+    box-shadow:
+        0 6px 16px rgba(34, 197, 94, 0.26),
+        0 2px 6px rgba(0, 0, 0, 0.3);
+    color: #fff;
+}
+
+.hilo-history-connector-loss {
+    border-color: rgba(239, 68, 68, 0.6);
+    background: linear-gradient(to bottom right, rgba(239, 68, 68, 0.95), rgba(225, 29, 72, 0.95));
+    box-shadow:
+        0 8px 24px rgba(239, 68, 68, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.hilo-history-connector-skip {
+    border-color: rgba(148, 163, 184, 0.65);
+    background: linear-gradient(to bottom right, rgba(148, 163, 184, 0.95), rgba(100, 116, 139, 0.95));
+    box-shadow:
+        0 8px 24px rgba(100, 116, 139, 0.4),
+        0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes hilo-history-badge-in {
+    from {
+        opacity: 0;
+        transform: rotate(-2deg) scale(0.88);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(-2deg) scale(1);
+    }
+}
+
+.hilo-message {
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    color: #d3ebff;
+    min-height: 18px;
+    font-family: "Afacad", ui-sans-serif, sans-serif;
+}
+
+.hilo-end-card-games-note-inline {
+    font-family: "Afacad", ui-sans-serif, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+    text-align: center;
+    white-space: nowrap;
+    margin-top: 0.55rem;
+}
+
+/* Result modal spacing tune: tighter title -> payout, roomier payout -> games note. */
+.absolute.inset-0.z-30 .relative.rounded-3xl h2.font-bold.text-3xl.sm\:text-4xl {
+    margin-bottom: 0;
+}
+
+.absolute.inset-0.z-30 .relative.rounded-3xl .flex.flex-col.items-center.gap-4.pt-4 {
+    gap: 0.65rem;
+}
+
+body.hilo-suppress-result-open .absolute.inset-0.z-20,
+body.hilo-suppress-result-open .absolute.inset-0.z-30 {
+    opacity: 0 !important;
+    background: transparent !important;
+    pointer-events: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+@media (max-width: 768px) {
+    .hilo-root {
+        --hilo-mobile-big-card-w: 92px;
+        --hilo-mobile-big-card-h: 132px;
+        --hilo-mobile-small-card-w: 56px;
+        --hilo-mobile-small-card-h: 78px;
+
+        justify-content: flex-start;
+        padding: 8px 12px 12px;
+        gap: 4px;
+    }
+
+    .hilo-table-shell {
+        gap: 12px;
+        margin-top: 0;
+        min-height: 202px;
+        padding: 4px 8px;
+    }
+
+    .hilo-guide-card {
+        width: 66px;
+        min-height: 100px;
+    }
+
+    .hilo-guide-value {
+        font-size: 26px;
+    }
+
+    .hilo-guide-copy {
+        font-size: 8px;
+    }
+
+    .hilo-header {
+        gap: 6px;
+    }
+
+    .hilo-stat {
+        padding: 6px 8px;
+    }
+
+    .hilo-stat strong {
+        font-size: 14px;
+    }
+
+    .hilo-card {
+        width: var(--hilo-mobile-big-card-w);
+        height: var(--hilo-mobile-big-card-h);
+    }
+
+    .hilo-card-shadow-1,
+    .hilo-card-shadow-2 {
+        width: var(--hilo-mobile-big-card-w);
+        height: var(--hilo-mobile-big-card-h);
+    }
+
+    .hilo-card-center {
+        font-size: 40px;
+    }
+
+    .hilo-card-corner {
+        font-size: 18px;
+    }
+
+    .hilo-action-row {
+        grid-template-columns: 1fr auto 1fr;
+        gap: 4px;
+        margin-top: 3px;
+    }
+
+    .hilo-center-actions {
+        gap: 6px;
+    }
+
+    .hilo-center-actions .hilo-action-btn,
+    .hilo-center-actions .hilo-cashout-btn {
+        width: 104px;
+        min-width: 104px;
+    }
+
+    .hilo-action-btn,
+    .hilo-cashout-btn {
+        height: 34px;
+        padding: 6px 8px !important;
+        font-size: 12px !important;
+        line-height: 1 !important;
+    }
+
+    .hilo-action-content {
+        gap: 4px;
+    }
+
+    .hilo-action-btn small {
+        font-size: 10px;
+    }
+
+    .hilo-cashout-btn {
+        min-width: 104px;
+    }
+
+    .hilo-profit-row {
+        display: none;
+    }
+
+    .hilo-profit-box {
+        padding: 6px 7px;
+    }
+
+    .hilo-profit-box p {
+        font-size: 10px;
+    }
+
+    .hilo-profit-box strong {
+        font-size: 14px;
+    }
+
+    .hilo-history-row {
+        align-items: flex-end;
+        min-height: calc(var(--hilo-mobile-small-card-h) + 20px);
+        margin-top: auto;
+        padding: 4px 6px 4px;
+    }
+
+    .hilo-history-scroll {
+        align-items: flex-end;
+        gap: 6px;
+        padding-bottom: 0;
+    }
+
+    .hilo-root ~ .absolute.bottom-4.right-4.z-30 {
+        right: 6px;
+        bottom: 6px;
+        gap: 4px;
+    }
+
+    .hilo-root ~ .absolute.bottom-4.right-4.z-30 > button {
+        padding: 3px !important;
+        width: 32px;
+        height: 32px;
+        min-height: 32px;
+        min-width: 32px;
+        border-radius: 5px;
+    }
+
+    .hilo-root ~ .absolute.bottom-4.right-4.z-30 > button svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .hilo-history-scroll-centered {
+        justify-content: center;
+    }
+
+    .hilo-history-item {
+        min-width: var(--hilo-mobile-small-card-w);
+        gap: 2px;
+    }
+
+    .hilo-history-card,
+    .hilo-card-compact {
+        width: var(--hilo-mobile-small-card-w);
+        height: var(--hilo-mobile-small-card-h);
+    }
+
+    .hilo-card-compact .hilo-card-center {
+        font-size: 22px;
+    }
+
+    .hilo-card-compact .hilo-card-corner {
+        left: 5px;
+        top: 3px;
+        font-size: 11px;
+    }
+
+    .hilo-card-compact .hilo-card-corner-bottom {
+        right: 5px;
+        bottom: 3px;
+    }
+
+    .hilo-card-compact.hilo-card-hidden {
+        border-width: 1.5px;
+        border-radius: 6px;
+    }
+
+    .hilo-card-compact.hilo-card-hidden .hilo-card-pattern {
+        inset: 4px;
+        border-radius: 5px;
+    }
+
+    .hilo-card-compact.hilo-card-hidden .hilo-card-pattern::before {
+        inset: 3px;
+        border-radius: 4px;
+    }
+
+    .hilo-history-label {
+        width: var(--hilo-mobile-small-card-w);
+        height: 15px;
+        font-size: 9px;
+        padding: 0 3px;
+    }
+
+    .hilo-history-connector {
+        top: calc(var(--hilo-mobile-small-card-h) * 0.36);
+        left: calc(var(--hilo-mobile-small-card-w) * -0.19);
+        width: calc(var(--hilo-mobile-small-card-w) * 0.35);
+        height: calc(var(--hilo-mobile-small-card-w) * 0.35);
+        border-radius: calc(var(--hilo-mobile-small-card-w) * 0.14);
+        border-width: 1.5px;
+        padding: 0;
+        transform: none;
+        animation: none;
+    }
+
+    .hilo-history-connector-icon {
+        width: calc(var(--hilo-mobile-small-card-w) * 0.19);
+        height: calc(var(--hilo-mobile-small-card-w) * 0.19);
+        display: block;
+        margin: auto;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .hilo-history-connector-icon-check {
+        width: calc(var(--hilo-mobile-small-card-w) * 0.16);
+        height: calc(var(--hilo-mobile-small-card-w) * 0.16);
+    }
+
+    .hilo-history-connector-icon-loss {
+        width: calc(var(--hilo-mobile-small-card-w) * 0.14);
+        height: calc(var(--hilo-mobile-small-card-w) * 0.14);
+    }
+}
+
+/* ----- Setup card static styles ----- */
+.hilo-setup-label {
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+}
+
+.hilo-setup-input {
+    background: #24323A;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+    outline: none;
+}
+
+.hilo-setup-input-disabled {
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.hilo-setup-neutral-bg {
+    background: #24323A;
+}
+
+.hilo-setup-payout-value {
+    color: #8CFF00;
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+.hilo-setup-rank-tile {
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+    outline: none;
+}
+
+.hilo-setup-rank-tile--higher {
+    background: #8CFF00;
+    color: #0d1803;
+    border: 1px solid #8CFF00;
+}
+
+.hilo-setup-rank-tile--lower {
+    background: #F59E0B;
+    color: #1C1300;
+    border: 1px solid #F59E0B;
+}
+
+.hilo-setup-rank-tile--skip {
+    background: #334155;
+    color: #dbe9f4;
+    border: 1px solid #64748B;
+}
+
+.hilo-setup-rank-tile.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.hilo-setup-paint-btn {
+    box-shadow: none !important;
+    outline: none;
+    opacity: 0.65;
+}
+
+.hilo-setup-paint-btn.is-selected {
+    opacity: 1;
+}
+
+.hilo-setup-paint-btn--higher {
+    background: #8CFF00;
+    color: #0d1803;
+    border: 1px solid #8CFF00;
+}
+
+.hilo-setup-paint-btn--lower {
+    background: #F59E0B;
+    color: #1C1300;
+    border: 1px solid #F59E0B;
+}
+
+.hilo-setup-paint-btn--skip {
+    background: #334155;
+    color: #dbe9f4;
+    border: 1px solid #64748B;
+}
+
+.hilo-setup-mode-tab {
+    border: none;
+    font-family: "Nohemi", ui-sans-serif, sans-serif;
+    color: rgba(255, 255, 255, 0.6);
+    background: transparent;
+}
+
+.hilo-setup-mode-tab.is-active {
+    background: #8CFF00;
+    color: #0d1803;
+}
+
+.hilo-setup-mode-tab--manual {
+    border-radius: 6px 0 0 6px;
+}
+
+.hilo-setup-mode-tab--auto {
+    border-radius: 0 6px 6px 0;
+}
+
+.hilo-setup-mode-tab.is-locked {
+    cursor: not-allowed;
+}
+
+.hilo-setup-mode-tabs-locked {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.hilo-setup-summary-box {
+    background: #1D262D;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+

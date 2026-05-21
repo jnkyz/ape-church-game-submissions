@@ -156,6 +156,8 @@ These steps are for **maintainers** who need to check out a submission PR locall
    git checkout review/asen-vox-pai-gow
    ```
 
+   *Note* - To list the game locally, either run a dev server or run ```npx tsx scripts/generateRegistry.ts```. Do not commit this file. 
+
 2. **Make your changes**, then commit and **push the same local branch to a feature branch on `origin`** (adjust the remote branch name to match your team’s naming, e.g. `feat/add-<game-slug>`):
 
    ```bash

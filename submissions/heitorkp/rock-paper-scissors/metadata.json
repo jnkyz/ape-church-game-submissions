@@ -1,0 +1,36 @@
+{
+  "team": "heitorkp",
+  "gameName": "rock-paper-scissors",
+  "displayTitle": "Rock Paper Scissors",
+  "description": "Classic Rock Paper Scissors against the house. Win each round for a 1.96x payout and let the multiplier compound — cash out anytime or push your luck toward the 1,027,604x jackpot at 20 wins.",
+  "authors": [
+    {
+      "name": "Heitorkp",
+      "telegram": "Heitorkp123"
+    }
+  ],
+  "revenueShare": [
+    {
+      "name": "Heitorkp",
+      "telegram": "Heitorkp123",
+      "address": "0x612ad099cDaCFD6B78559471e5c626D3C567e533",
+      "share": 100
+    }
+  ],
+  "status": "pending",
+  "category": "arcade",
+  "tags": [
+    "rock-paper-scissors",
+    "compounding-multiplier",
+    "cash-out",
+    "arcade"
+  ],
+  "thumbnail": "/rock-paper-scissors/card.png",
+  "banner": "/rock-paper-scissors/banner.png",
+  "mainComponent": "RPS.tsx",
+  "windowComponent": "RPSWindow.tsx",
+  "setupComponent": "RPSSetupCard.tsx",
+  "configFile": "rpsConfig.ts",
+  "version": "1.0.0",
+  "submittedAt": "2026-04-24"
+}

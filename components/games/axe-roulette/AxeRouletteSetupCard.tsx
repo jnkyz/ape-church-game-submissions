@@ -11,6 +11,9 @@ interface AxeRouletteSetupCardProps {
   game: Game;
   currentView: 0 | 1 | 2;
 
+  throwMode: 1 | 2;
+  setThrowMode: (mode: 1 | 2) => void;
+
   betAmount: number;
   setBetAmount: (amount: number) => void;
 
@@ -18,7 +21,8 @@ interface AxeRouletteSetupCardProps {
   isSpinning: boolean;
   payout: number | null;
   gameResult: "win" | "loss" | null;
-  resultMultiplier: number | null;
+  axeResults: {multiplier: number; payout: number}[];
+  currentAxeNumber: number;
   inReplayMode: boolean;
   isGamePaused?: boolean;
 
@@ -76,13 +80,16 @@ const ODDS = getOdds();
 const AxeRouletteSetupCard: React.FC<AxeRouletteSetupCardProps> = ({
   game,
   currentView,
+  throwMode,
+  setThrowMode,
   betAmount,
   setBetAmount,
   isLoading,
   isSpinning,
   payout,
   gameResult,
-  resultMultiplier,
+  axeResults,
+  currentAxeNumber,
   inReplayMode,
   isGamePaused = false,
   onPlay,
@@ -103,6 +110,42 @@ const AxeRouletteSetupCard: React.FC<AxeRouletteSetupCardProps> = ({
     return (
       <Card className="lg:basis-1/3 p-6 flex flex-col gap-5">
         <CardContent className="p-0 flex flex-col gap-5">
+
+          {/* Throw mode selector */}
+          <div>
+            <p className="text-xs font-semibold text-[#91989C] uppercase tracking-wide mb-2">
+              Throw Mode
+            </p>
+            <div className="flex gap-2">
+              <button
+                className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-colors ${
+                  throwMode === 1
+                    ? "bg-[#1A56DB] text-white"
+                    : "bg-[#2A3640] text-[#91989C] hover:text-white"
+                }`}
+                onClick={() => setThrowMode(1)}
+                disabled={isLoading}
+              >
+                🪓 Single Axe
+              </button>
+              <button
+                className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-colors ${
+                  throwMode === 2
+                    ? "bg-[#1A56DB] text-white"
+                    : "bg-[#2A3640] text-[#91989C] hover:text-white"
+                }`}
+                onClick={() => setThrowMode(2)}
+                disabled={isLoading}
+              >
+                🪓🪓 Double Axe
+              </button>
+            </div>
+            {throwMode === 2 && betAmount > 0 && (
+              <p className="text-xs text-[#91989C] mt-1.5">
+                {(betAmount / 2).toFixed(2)} APE per axe
+              </p>
+            )}
+          </div>
 
           <BetAmountInput
             min={minBet}
@@ -156,7 +199,7 @@ const AxeRouletteSetupCard: React.FC<AxeRouletteSetupCardProps> = ({
             disabled={!canPlay}
             onClick={onPlay}
           >
-            🪓 Spin & Throw
+            {throwMode === 2 ? "🪓🪓 Spin & Double Throw" : "🪓 Spin & Throw"}
           </Button>
         </CardFooter>
       </Card>
@@ -169,14 +212,28 @@ const AxeRouletteSetupCard: React.FC<AxeRouletteSetupCardProps> = ({
       <Card className="lg:basis-1/3 p-6 flex flex-col items-center justify-center gap-6">
         <CardContent className="p-0 flex flex-col items-center gap-4 w-full">
           <div className="w-full rounded-xl py-6 flex flex-col items-center gap-2 border-2 border-[#2A3640]">
-            <p className="text-sm text-[#91989C] uppercase tracking-wider">Axe in the air…</p>
+            <p className="text-sm text-[#91989C] uppercase tracking-wider">
+              {throwMode === 2
+                ? `Axe ${currentAxeNumber} of 2 in the air…`
+                : "Axe in the air…"}
+            </p>
             <p className="text-5xl">🪓</p>
             <p className="text-sm text-[#91989C] animate-pulse">
               {isSpinning ? "Spinning…" : "Waiting…"}
             </p>
+            {throwMode === 2 && axeResults.length === 1 && !isSpinning && (
+              <p className="text-xs text-[#91989C] mt-1">
+                Axe 1: {axeResults[0].multiplier > 0
+                  ? `${axeResults[0].multiplier}× — ${axeResults[0].payout.toFixed(2)} APE`
+                  : "Miss!"}
+              </p>
+            )}
           </div>
           <div className="w-full flex flex-col gap-1.5">
             <StatRow label="Bet" value={`${betAmount.toFixed(2)} APE`} />
+            {throwMode === 2 && (
+              <StatRow label="Per Axe" value={`${(betAmount / 2).toFixed(2)} APE`} />
+            )}
           </div>
         </CardContent>
       </Card>
@@ -188,7 +245,7 @@ const AxeRouletteSetupCard: React.FC<AxeRouletteSetupCardProps> = ({
     <Card className="lg:basis-1/3 p-6 flex flex-col gap-6">
       <CardContent className="p-0 flex flex-col gap-4">
 
-        {gameResult && (
+        {gameResult && throwMode === 1 && (
           <div
             className={`w-full rounded-xl py-4 flex flex-col items-center gap-1 border-2 ${
               gameResult === "win"
@@ -204,9 +261,38 @@ const AxeRouletteSetupCard: React.FC<AxeRouletteSetupCardProps> = ({
                 ? `+${(payout ?? 0).toFixed(2)} APE`
                 : "💀 No payout"}
             </p>
-            {gameResult === "win" && resultMultiplier && (
-              <p className="text-sm text-white opacity-60">{resultMultiplier}× multiplier</p>
+            {gameResult === "win" && axeResults[0]?.multiplier > 0 && (
+              <p className="text-sm text-white opacity-60">{axeResults[0].multiplier}× multiplier</p>
             )}
+          </div>
+        )}
+
+        {gameResult && throwMode === 2 && (
+          <div
+            className={`w-full rounded-xl py-4 flex flex-col items-center gap-2 border-2 ${
+              gameResult === "win"
+                ? "border-green-400 bg-green-950/40"
+                : "border-red-700 bg-red-950/40"
+            }`}
+          >
+            <p className="text-sm uppercase tracking-wider text-[#91989C]">
+              {gameResult === "win" ? "Hit!" : "Both missed!"}
+            </p>
+            <div className="flex flex-col gap-1 w-full px-4">
+              {axeResults.map((r, i) => (
+                <div key={i} className="flex justify-between text-sm">
+                  <span className="text-[#91989C]">Axe {i + 1}</span>
+                  <span className={r.multiplier > 0 ? "text-green-400" : "text-red-400"}>
+                    {r.multiplier > 0 ? `${r.multiplier}× — ${r.payout.toFixed(2)} APE` : "💀 Miss"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className={`text-3xl font-bold ${gameResult === "win" ? "text-green-400" : "text-red-400"}`}>
+              {gameResult === "win"
+                ? `+${(payout ?? 0).toFixed(2)} APE`
+                : "💀 No payout"}
+            </p>
           </div>
         )}
 

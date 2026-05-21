@@ -9,6 +9,7 @@ import ChickenCrossing from '@/components/games/chicken-crossing/ChickenCrossing
 import LootTumble from '@/components/games/loot-tumble/LootTumble'
 import CrashOrCashOut from '@/components/games/crash-or-cash-out/MyGame'
 import MinefieldPath from '@/components/games/minefield-path/MyGame'
+import NumberDice from '@/components/games/number-dice/MyGame'
 import DeadDraw from '@/components/games/dead-draw/DeadDraw'
 import GemStorm from '@/components/games/gem-storm/Paydirt'
 
@@ -22,6 +23,7 @@ const gameRegistry: Record<string, RegisteredGameComponent> = {
   'loot-tumble': LootTumble,
   'crash-or-cash-out': CrashOrCashOut,
   'minefield-path': MinefieldPath,
+  'number-dice': NumberDice,
   'dead-draw': DeadDraw,
   'gem-storm': GemStorm,
 }

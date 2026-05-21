@@ -1,0 +1,35 @@
+{
+  "team": "w3xplore",
+  "gameName": "number-dice",
+  "displayTitle": "Number Dice",
+  "description": "Roll 9 dice and match numbers! Get 3 matches for 1x, 5 for 2x, 7 for 5x. Complete a row, column, or diagonal for 10x each. Lines stack!",
+  "authors": [
+    {
+      "name": "w3xplore",
+      "telegram": "skyarc01"
+    }
+  ],
+  "revenueShare": [
+    {
+      "name": "w3xplore",
+      "telegram": "skyarc01",
+      "address": "0x3Db21A7C9B20018F1d88b893D714BE45AB4A19A0",
+      "share": 100
+    }
+  ],
+  "status": "pending",
+  "category": "dice",
+  "tags": [
+    "dice",
+    "arcade",
+    "numbers"
+  ],
+  "thumbnail": "/number-dice/card.png",
+  "banner": "/number-dice/banner.png",
+  "mainComponent": "MyGame.tsx",
+  "windowComponent": "MyGameWindow.tsx",
+  "setupComponent": "MyGameSetupCard.tsx",
+  "configFile": "myGameConfig.ts",
+  "version": "1.0.0",
+  "submittedAt": "2026-03-22"
+}

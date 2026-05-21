@@ -1,0 +1,30 @@
+/* Hide scrollbars visually while preserving scroll functionality.
+   Applied to the multiplier ladder (horizontal) and round history (vertical). */
+.rps-no-scrollbar {
+  -ms-overflow-style: none; /* IE / legacy Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.rps-no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, modern Edge */
+  width: 0;
+  height: 0;
+}
+
+/* Commit button pulse — fires when every mini-game has a pick so the user
+   knows they're ready to hit commit. Glow + subtle scale. */
+@keyframes rps-commit-pulse {
+  0%, 100% { box-shadow: 0 0 18px var(--rps-pulse-color, #1E88E5aa), 0 0 0 0 var(--rps-pulse-color, #1E88E5aa); transform: scale(1); }
+  50%      { box-shadow: 0 0 32px var(--rps-pulse-color, #1E88E5cc), 0 0 0 6px rgba(255, 255, 255, 0); transform: scale(1.02); }
+}
+.rps-commit-pulse {
+  animation: rps-commit-pulse 1.6s ease-in-out infinite;
+}
+
+/* Streak flame — bounces with the heart-beat of a hot streak. */
+@keyframes rps-streak-pulse {
+  0%, 100% { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 6px #FF6F0088); }
+  50%      { transform: scale(1.12) rotate(3deg); filter: drop-shadow(0 0 12px #FF6F00cc); }
+}
+.rps-streak-pulse {
+  animation: rps-streak-pulse 0.9s ease-in-out infinite;
+}

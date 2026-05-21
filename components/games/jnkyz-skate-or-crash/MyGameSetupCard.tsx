@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Info } from "lucide-react";
+import { CircleHelp, Info } from "lucide-react";
 import { Game } from "@/lib/games";
 import BetAmountInput from "@/components/shared/BetAmountInput";
 import { CustomSlider } from "@/components/shared/CustomSlider";
@@ -40,7 +40,10 @@ interface MyGameSetupCardProps {
     maxBet: number;
     isGameOngoing: boolean;
     crashAt: number | null;
-    introSplashActive?: boolean;
+    playCurrency: "ape" | "gp";
+    onPlayCurrencyChange: (currency: "ape" | "gp") => void;
+    currencySwitchDisabled: boolean;
+    onOpenRules?: () => void;
 }
 
 const AUTO_CASHOUT_INFO =
@@ -50,6 +53,7 @@ const MAX_PROFIT_INFO =
 const BRAND_PRIMARY = "#7FFFD4";
 const BRAND_SURFACE = "linear-gradient(160deg, rgba(7, 20, 28, 0.95), rgba(15, 40, 53, 0.9))";
 const BRAND_BORDER = "rgba(127, 255, 212, 0.35)";
+const TOKEN_USD_RATE = 1;
 
 const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
     game,
@@ -74,9 +78,13 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
     minBet,
     isGameOngoing,
     crashAt,
-    introSplashActive = false,
+    playCurrency,
+    onPlayCurrencyChange,
+    currencySwitchDisabled,
+    onOpenRules,
 }) => {
     const themeColorBackground = BRAND_PRIMARY;
+    const tokenLabel = playCurrency === "ape" ? "APE" : "GP";
     const [usdMode, setUsdMode] = React.useState(false);
     const [autoEnabled, setAutoEnabled] = React.useState(autoCashoutAt !== null);
     const primaryButtonClass =
@@ -98,39 +106,61 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
         return walletBalance;
     };
 
+    const formatTokenAmount = (
+        amount: number,
+        opts?: { minFrac?: number; maxFrac?: number },
+    ): string => {
+        const defaultMin = usdMode ? 2 : 0;
+        const defaultMax = usdMode ? 2 : 3;
+        let minFrac = opts?.minFrac ?? defaultMin;
+        let maxFrac = opts?.maxFrac ?? defaultMax;
+        if (minFrac > maxFrac) {
+            minFrac = maxFrac;
+        }
+        if (usdMode) {
+            return `$${(amount * TOKEN_USD_RATE).toLocaleString([], {
+                minimumFractionDigits: minFrac,
+                maximumFractionDigits: maxFrac,
+            })}`;
+        }
+        return `${amount.toLocaleString([], {
+            minimumFractionDigits: minFrac,
+            maximumFractionDigits: maxFrac,
+        })} ${tokenLabel}`;
+    };
+
     const getCurrentWalletAmountString = (): string => {
-        return `${walletBalance.toFixed(2)} APE`;
+        return formatTokenAmount(walletBalance, { minFrac: 2, maxFrac: 2 });
     };
 
-    const getBetAmountText = (): string => {
-        return `${(betAmount || 0).toLocaleString([], {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 3,
-        })} APE`;
+    const getBetAmountText = (): string => formatTokenAmount(betAmount || 0);
 
-    };
+    const getTotalBuyInText = (): string => formatTokenAmount(betAmount || 0);
 
-    const getTotalBuyInText = (): string => {
-        return `${(betAmount || 0).toLocaleString([], {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 3,
-        })} APE`;
-    };
-
-    const getTotalPayoutText = (): string => {
-        return `${(payout || 0).toLocaleString([], {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 3,
-        })} APE`;
-    };
+    const getTotalPayoutText = (): string => formatTokenAmount(payout || 0);
 
     const getMaxProfitString = (): string => {
         const projected = autoCashoutAt ? betAmount * autoCashoutAt : 0;
-        return `${projected.toLocaleString([], {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 3,
-        })} APE`;
+        return formatTokenAmount(projected);
     };
+
+    const getMaxBetText = (): string => formatTokenAmount(maxBet, { maxFrac: 0 });
+
+    const AmountValue = ({
+        children,
+        className = "",
+    }: {
+        children: React.ReactNode;
+        className?: string;
+    }) => (
+        <p
+            className={`text-right cursor-pointer transition-colors hover:text-[#C9FFF3] ${className}`}
+            title="Click to toggle USD"
+            onClick={() => setUsdMode(!usdMode)}
+        >
+            {children}
+        </p>
+    );
 
     const ShowInUsdAndStats = (invertOnDesktop: boolean) => {
         const showGreenText = (payout || 0) > betAmount;
@@ -149,42 +179,20 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                     </p>
                 )}
 
-                {/* show in usd option */}
-                <div className="flex items-center justify-between gap-2">
-                    <div>
-                        <p className="text-foreground text-lg font-semibold">
-                            Show Bets in USD
-                        </p>
-                        <p className="text-sm">
-                            Your bets are valued in {usdMode ? "US Dollars" : "APE"}
-                        </p>
-                    </div>
-                    <Switch
-                        checked={usdMode}
-                        onCheckedChange={() => {
-                            setUsdMode(!usdMode);
-                        }}
-                    />
-                </div>
-
-                {/* stats */}
                 <div className="w-full flex flex-col items-center gap-2 font-medium text-xs text-[#91989C]">
-                    {/* bet per spin */}
                     <div className="w-full flex justify-between items-center gap-2">
                         <p>Bet Amount</p>
-                        <p className="text-right">{getBetAmountText()}</p>
+                        <AmountValue>{getBetAmountText()}</AmountValue>
                     </div>
-                    {/* bet per spin */}
                     <div className="w-full flex justify-between items-center gap-2">
                         <p>Total Buy In</p>
-                        <p className="text-right">{getTotalBuyInText()}</p>
+                        <AmountValue>{getTotalBuyInText()}</AmountValue>
                     </div>
-                    {/* total pay out */}
                     <div className="w-full flex justify-between items-center gap-2">
                         <p>Total Pay Out</p>
-                        <p className={`text-right ${showGreenText ? "text-success" : ""}`}>
+                        <AmountValue className={showGreenText ? "text-success" : ""}>
                             {getTotalPayoutText()}
-                        </p>
+                        </AmountValue>
                     </div>
                 </div>
             </div>
@@ -208,44 +216,24 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                     </p>
                 )}
 
-                {/* show in usd option */}
-                <div className="flex items-center justify-between gap-2">
-                    <div>
-                        <p className="text-foreground text-lg font-semibold">
-                            Show Bets in USD
-                        </p>
-                        <p className="text-sm">Your bets are valued in US Dollars</p>
-                    </div>
-                    <Switch
-                        checked={usdMode}
-                        onCheckedChange={() => {
-                            setUsdMode(!usdMode);
-                        }}
-                    />
-                </div>
-
-                {/* stats */}
                 <div className="w-full flex flex-col items-center gap-2 font-medium text-xs text-[#91989C]">
-                    {/* bet amount */}
                     <div className="w-full flex justify-between items-center gap-2">
                         <p>Bet Amount</p>
-                        <p className="text-right">{getBetAmountText()}</p>
+                        <AmountValue>{getBetAmountText()}</AmountValue>
                     </div>
-                    {/* bet per spin */}
                     <div className="w-full flex justify-between items-center gap-2">
                         <p>Total Buy In</p>
-                        <p className="text-right">{getTotalBuyInText()}</p>
+                        <AmountValue>{getTotalBuyInText()}</AmountValue>
                     </div>
-                    {/* total pay out */}
                     <div className="w-full flex justify-between items-center gap-2">
                         <p>Total Pay Out</p>
-                        <p className={`text-right ${showGreenText ? "text-success" : ""}`}>
+                        <AmountValue className={showGreenText ? "text-success" : ""}>
                             {getTotalPayoutText()}
-                        </p>
+                        </AmountValue>
                     </div>
                     <div className="w-full flex justify-between items-center gap-2">
                         <p>Wallet Balance</p>
-                        <p className="text-right">{getCurrentWalletAmountString()}</p>
+                        <AmountValue>{getCurrentWalletAmountString()}</AmountValue>
                     </div>
                 </div>
             </div>
@@ -261,65 +249,75 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                 boxShadow: "0 0 30px rgba(0, 229, 255, 0.18)",
             }}
         >
-            <div className="mb-5 flex items-center justify-between rounded-md border border-[#7FFFD444] bg-[#07131B]/75 px-3 py-2">
-                <div>
-                    <p className="text-sm font-bold tracking-[0.06em] text-[#ECFFFB]">{game.title}</p>
-                    {introSplashActive && currentView === 0 ? (
-                        <>
-                            <p className="mt-2 text-lg font-black uppercase tracking-[0.08em] text-[#7FFFD4]">
-                                How To Play
-                            </p>
-                            <p className="mt-1 text-xs leading-relaxed text-[#8AD9E8]">
-                                Read the rules, then tap{" "}
-                                <span className="font-semibold text-[#C9FFF3]">Agree &amp; Play</span>{" "}
-                                on the game screen to set your bet and play.
-                            </p>
-                        </>
-                    ) : (
-                        <>
-                            <div className="mt-2 text-3xl font-black tracking-[0.06em] text-[#7FFFD4] drop-shadow-[0_0_18px_rgba(127,255,212,0.5)]">
-                                {multiplier.toFixed(2)}x
-                            </div>
-                            <div className="mt-1 text-xs uppercase tracking-[0.09em] text-[#D8FFF6]">
-                                {statusText}
-                            </div>
-                            <div className="mt-1 flex gap-3 text-[11px] text-[#98C9D3]">
-                                <span>{secondsText}</span>
-                                <span>Crash @{crashAt ? `${crashAt.toFixed(2)}x` : "--"}</span>
-                            </div>
-                        </>
-                    )}
-                </div>
-                <img
-                    src="/submissions/jnkyz-skate-or-crash/ui/jnkyz-logo-white.png"
-                    alt="JNKYZ"
-                    className="h-8 w-8 rounded-xl border border-[#7FFFD455] bg-transparent p-1 object-contain mix-blend-normal opacity-100"
-                />
-            </div>
-            {currentView === 0 && introSplashActive ? (
-                <>
-                    <CardContent className="font-roboto grow">
-                        <ul className="space-y-2.5 text-sm text-white/90">
-                            <li>1. Set your bet amount and optional auto-cashout target.</li>
-                            <li>
-                                2. Press <span className="font-semibold">Place Your Bet</span> to start
-                                the run.
-                            </li>
-                            <li>3. Multiplier rises while Wade skates — cash out before crash.</li>
-                            <li>4. If crash happens first, you lose that round&apos;s bet.</li>
-                            <li>5. Use Play Again, Rewatch, or Change Bet after each round.</li>
-                        </ul>
-                        <p className="mt-4 text-xs text-[#8AD9E8]">
-                            Tip: Auto Cashout locks profit automatically at your target multiplier.
+            <div className="mb-5 rounded-md border border-[#7FFFD444] bg-[#07131B]/75 px-3 py-2.5">
+                <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold tracking-[0.06em] text-[#ECFFFB]">
+                            {game.title}
                         </p>
-                    </CardContent>
-                    <div className="grow" />
-                </>
-            ) : null}
-            {currentView === 0 && !introSplashActive ? (
+                        <div className="mt-2 text-3xl font-black tracking-[0.06em] text-[#7FFFD4] drop-shadow-[0_0_18px_rgba(127,255,212,0.5)]">
+                            {multiplier.toFixed(2)}x
+                        </div>
+                        <div className="mt-1 text-xs uppercase tracking-[0.09em] text-[#D8FFF6]">
+                            {statusText}
+                        </div>
+                        <div className="mt-1 flex gap-3 text-[11px] text-[#98C9D3]">
+                            <span>{secondsText}</span>
+                            <span>
+                                Crash @{crashAt ? `${crashAt.toFixed(2)}x` : "--"}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                        {onOpenRules ? (
+                            <button
+                                type="button"
+                                onClick={onOpenRules}
+                                className="flex h-7 w-7 items-center justify-center rounded-md border border-[#7FFFD433] text-[#8AD9E8] transition hover:border-[#7FFFD466] hover:bg-[#7FFFD4]/10 hover:text-[#C9FFF3]"
+                                title="How to play"
+                                aria-label="How to play"
+                            >
+                                <CircleHelp className="h-3.5 w-3.5" />
+                            </button>
+                        ) : null}
+                        <img
+                            src="/submissions/jnkyz-skate-or-crash/ui/jnkyz-logo-white.png"
+                            alt="JNKYZ"
+                            className="h-8 w-8 rounded-xl border border-[#7FFFD455] bg-transparent p-1 object-contain mix-blend-normal opacity-100"
+                        />
+                    </div>
+                </div>
+            </div>
+            {currentView === 0 ? (
                 <>
                     <CardContent className="font-roboto">
-                        {/* place your bet button - mobile */}
+                        <div className="mb-4 flex items-center justify-end gap-2 text-xs">
+                            <span
+                                className={
+                                    playCurrency === "ape"
+                                        ? "font-semibold text-[#C9FFF3]"
+                                        : "text-[#8AD9E8]"
+                                }
+                            >
+                                APE
+                            </span>
+                            <Switch
+                                checked={playCurrency === "gp"}
+                                disabled={currencySwitchDisabled}
+                                onCheckedChange={(checked) =>
+                                    onPlayCurrencyChange(checked ? "gp" : "ape")
+                                }
+                            />
+                            <span
+                                className={
+                                    playCurrency === "gp"
+                                        ? "font-semibold text-[#C9FFF3]"
+                                        : "text-[#8AD9E8]"
+                                }
+                            >
+                                GP
+                            </span>
+                        </div>
                         <Button
                             onClick={onPlay}
                             className={`lg:hidden ${primaryButtonClass}`}
@@ -345,6 +343,8 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                                 setUsdMode={setUsdMode}
                                 disabled={isLoading}
                                 themeColorBackground={themeColorBackground}
+                                balanceUnitLabel={tokenLabel}
+                                currencyToken={playCurrency}
                             />
                         </div>
 
@@ -424,15 +424,13 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                                         </Tooltip>
                                     </TooltipProvider>
                                 </div>
-                                <p className="text-right">{getMaxProfitString()}</p>
+                                <AmountValue>{getMaxProfitString()}</AmountValue>
                             </div>
                             <div className="w-full flex justify-between items-center gap-2">
                                 <div className="flex items-center gap-2">
                                     <p>Max Bet Per Game</p>
                                 </div>
-                                <p className="text-right">
-                                    {maxBet.toLocaleString([], { maximumFractionDigits: 0 })} APE
-                                </p>
+                                <AmountValue>{getMaxBetText()}</AmountValue>
                             </div>
                         </div>
 

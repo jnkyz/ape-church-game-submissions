@@ -17,8 +17,13 @@ const AXE_FLIGHT    = 330;  // axe travel duration (11 frames × 30ms)
 const HIT_DELAY     = AXE_THROW_AT + AXE_FLIGHT; // when wheel snaps + result is known
 const GAME_OVER_DELAY = 1800; // after result, transition to game-over view
 
+interface AxeRouletteComponentProps {
+  game: Game;
+}
+
 const AxeRouletteComponent: React.FC = () => {
   const game: Game = axeRouletteGame;
+  
   const router = useRouter();
   const searchParams = useSearchParams();
   const replayIdString = searchParams.get("id");
@@ -41,71 +46,105 @@ const AxeRouletteComponent: React.FC = () => {
     timeoutsRef.current = [];
   };
 
+  const [throwMode, setThrowMode]             = useState<1 | 2>(1);
   const [betAmount, setBetAmount]             = useState<number>(0);
   const [spinPhase, setSpinPhase]             = useState<SpinPhase>("idle");
   const [wheelRotation, setWheelRotation]     = useState<number>(0);
   const [gameResult, setGameResult]           = useState<"win" | "loss" | null>(null);
-  const [resultMultiplier, setResultMultiplier] = useState<number | null>(null);
   const [payout, setPayout]                   = useState<number | null>(null);
-  const [lastSpinAngle, setLastSpinAngle]     = useState<number | null>(null);
+  const [axeResults, setAxeResults]           = useState<{multiplier: number; payout: number}[]>([]);
+  const [currentAxeNumber, setCurrentAxeNumber] = useState(0);
+  const [lastSpinAngles, setLastSpinAngles]   = useState<number[]>([]);
+  const [stuckAxeAngles, setStuckAxeAngles]   = useState<number[]>([]);
 
   const gameOver      = currentView === 2;
   const shouldShowPNL = !!payout && payout > betAmount;
 
-  // ── Core spin logic ──────────────────────────────────────────────────────────
-  const executeSpin = (fixedAngle?: number): void => {
-    // 1. Pick landing angle (random or fixed for rewatch)
-    const targetAngle = fixedAngle ?? Math.random() * 360;
-    setLastSpinAngle(targetAngle);
+  // ── Core spin logic (single axe throw) ───────────────────────────────────────
+  const executeSpin = (axeBet: number, fixedAngle?: number): Promise<{multiplier: number; payout: number; angle: number; restingRotation: number}> => {
+    return new Promise((resolve) => {
+      const targetAngle = fixedAngle ?? Math.random() * 360;
 
-    // 2. Find which slice the angle lands in
-    const landedSlice =
-      WHEEL_SLICES.find((s) => targetAngle >= s.startAngle && targetAngle < s.endAngle) ??
-      WHEEL_SLICES[0];
+      const landedSlice =
+        WHEEL_SLICES.find((s) => targetAngle >= s.startAngle && targetAngle < s.endAngle) ??
+        WHEEL_SLICES[0];
 
-    // 3. Compute resting rotation so the CENTER of the winning slice aligns to
-    //    the 12 o'clock pointer. Using the mid-angle (not the raw random angle)
-    //    ensures the axe always visually lands in the middle of the slice while
-    //    keeping the probability distribution identical (slice selection still
-    //    depends purely on targetAngle covering the full 360°).
-    const midAngle = (landedSlice.startAngle + landedSlice.endAngle) / 2;
-    const restingRotation = (360 - midAngle) % 360;
-    setWheelRotation(restingRotation);
+      const midAngle = (landedSlice.startAngle + landedSlice.endAngle) / 2;
+      const restingRotation = (360 - midAngle) % 360;
+      setWheelRotation(restingRotation);
 
-    // 4. Phase: wheel spins freely at constant speed
-    setSpinPhase("spinning");
+      setSpinPhase("spinning");
 
-    // 5. Axe starts flying
-    timeoutsRef.current.push(setTimeout(() => setSpinPhase("hitting"), AXE_THROW_AT));
-
-    // 6. Axe hits → wheel snaps to resting position → show result
-    timeoutsRef.current.push(setTimeout(() => {
-      setSpinPhase("stopped");
-
-      const mult = landedSlice.multiplier;
-      setResultMultiplier(mult > 0 ? mult : null);
-
-      if (mult > 0) {
-        const winPayout = betAmount * mult;
-        setPayout(winPayout);
-        setWalletBalance((prev) => prev + winPayout);
-        setGameResult("win");
-        if (mult === 0.5) {
-          toast(`½× — Recovered ${winPayout.toFixed(2)} APE`);
-        } else if (mult === 1) {
-          toast(`1× — Bet returned (${winPayout.toFixed(2)} APE)`);
-        } else {
-          toast.success(`${mult}× — You won ${winPayout.toFixed(2)} APE!`);
-        }
-      } else {
-        setPayout(0);
-        setGameResult("loss");
-      }
+      timeoutsRef.current.push(setTimeout(() => setSpinPhase("hitting"), AXE_THROW_AT));
 
       timeoutsRef.current.push(setTimeout(() => {
-        setCurrentView(2);
-      }, GAME_OVER_DELAY));
-    }, HIT_DELAY));
+        setSpinPhase("stopped");
+        const mult = landedSlice.multiplier;
+        const axePayout = mult > 0 ? axeBet * mult : 0;
+        resolve({ multiplier: mult, payout: axePayout, angle: targetAngle, restingRotation });
+      }, HIT_DELAY));
+    });
+  };
+
+  // ── Throw sequence (handles single & dual mode) ─────────────────────────────
+  const executeThrowSequence = async (fixedAngles?: number[]): Promise<void> => {
+    const perAxeBet = throwMode === 2 ? betAmount / 2 : betAmount;
+    const angles: number[] = [];
+    const results: {multiplier: number; payout: number}[] = [];
+
+    setCurrentAxeNumber(1);
+
+    const result1 = await executeSpin(perAxeBet, fixedAngles?.[0]);
+    angles.push(result1.angle);
+    results.push(result1);
+    setAxeResults([...results]);
+
+    if (throwMode === 2) {
+      if (result1.multiplier > 0) {
+        toast(`Axe 1: ${result1.multiplier}× — ${result1.payout.toFixed(2)} APE`);
+      } else {
+        toast("Axe 1: Miss!");
+      }
+
+      await new Promise<void>((r) => { timeoutsRef.current.push(setTimeout(r, 1000)); });
+      setCurrentAxeNumber(2);
+      setSpinPhase("idle");
+      // Pin first axe to the wheel now that the animated axe is hidden
+      setStuckAxeAngles([(360 - result1.restingRotation) % 360]);
+      await new Promise<void>((r) => { timeoutsRef.current.push(setTimeout(r, 80)); });
+
+      const result2 = await executeSpin(perAxeBet, fixedAngles?.[1]);
+      angles.push(result2.angle);
+      results.push(result2);
+      setAxeResults([...results]);
+
+      if (result2.multiplier > 0) {
+        toast(`Axe 2: ${result2.multiplier}× — ${result2.payout.toFixed(2)} APE`);
+      } else {
+        toast("Axe 2: Miss!");
+      }
+    }
+
+    const totalPayout = results.reduce((sum, r) => sum + r.payout, 0);
+    setPayout(totalPayout);
+
+    if (totalPayout > 0) {
+      setWalletBalance((prev) => prev + totalPayout);
+      setGameResult("win");
+      if (throwMode === 1) {
+        const mult = results[0].multiplier;
+        if (mult === 0.5) toast(`½× — Recovered ${totalPayout.toFixed(2)} APE`);
+        else if (mult === 1) toast(`1× — Bet returned (${totalPayout.toFixed(2)} APE)`);
+        else toast.success(`${mult}× — You won ${totalPayout.toFixed(2)} APE!`);
+      } else {
+        toast.success(`Total winnings: ${totalPayout.toFixed(2)} APE!`);
+      }
+    } else {
+      setGameResult("loss");
+    }
+
+    setLastSpinAngles(angles);
+    timeoutsRef.current.push(setTimeout(() => setCurrentView(2), GAME_OVER_DELAY));
   };
 
   // ── Lifecycle functions ──────────────────────────────────────────────────────
@@ -116,17 +155,17 @@ const AxeRouletteComponent: React.FC = () => {
     setWalletBalance((prev) => prev - betAmount);
     setCurrentView(1);
     setGameResult(null);
-    setResultMultiplier(null);
     setPayout(null);
+    setAxeResults([]);
+    setStuckAxeAngles([]);
 
-    // Simulate on-chain transaction
     console.log("mock tx — gameId:", currentGameId.toString(), "randomWord:", userRandomWord);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, TX_DELAY));
-      toast.success("Axe thrown!");
+      toast.success(throwMode === 2 ? "First axe thrown!" : "Axe thrown!");
       setIsLoading(false);
-      executeSpin();
+      await executeThrowSequence();
     } catch (err) {
       console.error("Unexpected error:", err);
       toast.error("Something went wrong.");
@@ -142,7 +181,9 @@ const AxeRouletteComponent: React.FC = () => {
     setCurrentView(0);
     setPayout(null);
     setGameResult(null);
-    setResultMultiplier(null);
+    setAxeResults([]);
+    setStuckAxeAngles([]);
+    setCurrentAxeNumber(0);
 
     if (replayIdString !== null) {
       const params = new URLSearchParams(searchParams.toString());
@@ -157,24 +198,26 @@ const AxeRouletteComponent: React.FC = () => {
     setWheelRotation(0);
     setCurrentView(1);
     setGameResult(null);
-    setResultMultiplier(null);
     setPayout(null);
+    setAxeResults([]);
+    setStuckAxeAngles([]);
     setWalletBalance((prev) => prev - betAmount);
-    // Brief pause so wheel resets visually before spinning again
-    setTimeout(() => executeSpin(), 80);
+    await new Promise((r) => setTimeout(r, 80));
+    await executeThrowSequence();
   };
 
-  const handleRewatch = (): void => {
-    if (lastSpinAngle === null) return;
+  const handleRewatch = async (): Promise<void> => {
+    if (lastSpinAngles.length === 0) return;
     clearAllTimeouts();
     setSpinPhase("idle");
     setWheelRotation(0);
     setCurrentView(1);
     setGameResult(null);
-    setResultMultiplier(null);
     setPayout(null);
-    // Replay with the same angle — no transaction, no bet deducted
-    setTimeout(() => executeSpin(lastSpinAngle), 80);
+    setAxeResults([]);
+    setStuckAxeAngles([]);
+    await new Promise((r) => setTimeout(r, 80));
+    await executeThrowSequence(lastSpinAngles);
   };
 
   return (
@@ -206,6 +249,7 @@ const AxeRouletteComponent: React.FC = () => {
               gameResult={gameResult}
               isGameOver={gameOver}
               muteSfx={muteSfx}
+              stuckAxeAngles={stuckAxeAngles}
             />
           </GameWindow>
         </div>
@@ -214,13 +258,16 @@ const AxeRouletteComponent: React.FC = () => {
         <AxeRouletteSetupCard
           game={game}
           currentView={currentView}
+          throwMode={throwMode}
+          setThrowMode={setThrowMode}
           betAmount={betAmount}
           setBetAmount={setBetAmount}
           isLoading={isLoading}
           isSpinning={spinPhase === "spinning" || spinPhase === "hitting"}
           payout={payout}
           gameResult={gameResult}
-          resultMultiplier={resultMultiplier}
+          axeResults={axeResults}
+          currentAxeNumber={currentAxeNumber}
           inReplayMode={replayIdString !== null}
           onPlay={playGame}
           onReset={handleReset}

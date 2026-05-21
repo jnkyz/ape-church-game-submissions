@@ -1,26 +1,48 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Suspense } from 'react'
 import { getAllGameMetadata } from '@/lib/getGameMetadata'
 import StatusBadge from '@/components/shared/StatusBadge'
+import SubmissionsSortSelect from '@/components/shared/SubmissionsSortSelect'
+import {
+  parseSubmissionSort,
+  sortGameMetadata,
+} from '@/lib/submissionSort'
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ sort?: string }>
+}) {
+  const { sort: sortRaw } = await searchParams
+  const sort = parseSubmissionSort(sortRaw)
+
   const allGames = await getAllGameMetadata()
-  const games = [...allGames].sort((a, b) => {
-    const dateA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0
-    const dateB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0
-    return dateB - dateA
-  })
+  const games = sortGameMetadata(allGames, sort)
 
   return (
     <main>
-      <h1 className="text-3xl sm:text-4xl font-bold mb-2">Ape Church Game Submissions</h1>
-      <p className="text-muted-foreground mb-8">Browse submitted games</p>
+      <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">
+            Ape Church Game Submissions
+          </h1>
+          <p className="text-muted-foreground">Browse submitted games</p>
+        </div>
+        <Suspense
+          fallback={
+            <div className="h-10 w-full min-w-[12rem] max-w-xs animate-pulse rounded-lg bg-muted/30 sm:w-56" />
+          }
+        >
+          <SubmissionsSortSelect currentSort={sort} />
+        </Suspense>
+      </div>
 
       {games.length === 0 && (
         <p className="text-muted-foreground">No game submissions yet.</p>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
         {games.map((game) => (
           <Link
             key={game.gameName}
