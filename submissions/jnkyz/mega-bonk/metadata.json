@@ -1,0 +1,36 @@
+{
+  "team": "jnkyz",
+  "gameName": "mega-bonk",
+  "displayTitle": "Mega Bonk",
+  "description": "Set your target difficulty, place your APE bet, and BONK the machine. Score higher than the target to win. Higher difficulty means bigger payouts — if you can pull it off.",
+  "authors": [
+    {
+      "name": "JNKYZ",
+      "telegram": "abyss_shadows"
+    }
+  ],
+  "revenueShare": [
+    {
+      "name": "JNKYZ",
+      "telegram": "abyss_shadows",
+      "address": "0x1Cf0F66B4169146dF84f39203e3C126373A5D47e",
+      "share": 100
+    }
+  ],
+  "status": "pending",
+  "category": "arcade",
+  "tags": [
+    "arcade",
+    "strength",
+    "boxing",
+    "3d"
+  ],
+  "thumbnail": "/mega-bonk/card.png",
+  "banner": "/mega-bonk/banner.png",
+  "mainComponent": "MegaBonk.tsx",
+  "windowComponent": "MegaBonkWindow.tsx",
+  "setupComponent": "MegaBonkSetupCard.tsx",
+  "configFile": "megaBonkConfig.ts",
+  "version": "1.0.0",
+  "submittedAt": "2026-06-01"
+}
